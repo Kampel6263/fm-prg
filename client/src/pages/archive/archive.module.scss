@@ -1,0 +1,116 @@
+.archive{
+    padding-bottom: 120px;
+}
+
+.container{
+    max-width: 1050px;
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 180px;
+  
+}
+
+.box{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 40px;
+}
+
+.dateItem{
+    border: 1px solid #346f7c;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: center;
+    border-radius: 4px;
+    transition: .1s;
+    cursor: pointer;
+    &:hover{
+        background: #346f7c;
+        color: #fff;
+    }
+    &.active{
+        background: #346f7c;
+        color: #fff;
+    }
+}
+
+
+.table{
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 15px;
+  margin-top: 15px;
+    border: 1px solid #346f7c22;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 0px 20px 2px rgba(52, 111, 124, 0.03);
+
+    .row{
+        font-size: 18px;
+        display: grid;
+        grid-template-columns: 1fr 0.6fr 0.6fr 0.6fr;
+        padding: 12px 18px;
+        padding-right: 85px;
+        column-gap: 80px;
+        position: relative;
+        overflow: hidden;
+
+        .rowItem{
+            line-height: 22px;
+        }
+        
+        
+        &:nth-child(2n){
+            background: #346f7c05;
+          
+            
+           
+        }
+        &:last-child{
+            background: #83242405;
+            border-top: 1px solid #83242410;
+        }
+
+    }
+    
+}
+
+.pickDateForm{
+    
+    input{
+        height: 33px;
+        margin-right: 20px;
+    }
+}
+
+.diver{
+    text-align: center;
+    margin: 40px 0 20px;
+    position: relative;
+    font-size: 19px;
+    &::before, &:after{
+        display: block;
+        position: absolute;
+        content: '';
+        width: 47%;
+        height: 1px;
+        background: #346f7c;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    &::after{
+        right: 0;
+    }
+}
+
+.empty{
+    padding: 140px 0;
+    text-align: center;
+
+}
+.noCredit{
+    display: block;
+    margin-bottom: 22px;
+    text-align: center;
+    font-size: 26px;
+}

@@ -1,0 +1,55 @@
+body {
+  margin: 0px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+input:-webkit-autofill{
+    background: red !important;
+}
+
+
+
+
+body{
+	font-family: 'Lato',Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.2;
+	font-weight: normal;
+  overflow-y: scroll;
+  color: #26535e;
+}
+
+input{
+  font-family: 'Lato',Arial, sans-serif;
+	font-size: 16px;
+  outline: none;
+  border: none;
+  background: none !important;
+  padding: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+
+}
+
+h2{
+  margin-bottom: 0px;
+}
+
+:root{
+  /* --toastify-color-info: #3498db; */
+  --toastify-color-success: #346f7c !important;
+  --toastify-color-error: #832424 !important;
+}

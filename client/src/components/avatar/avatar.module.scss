@@ -1,0 +1,25 @@
+.avatar{
+    text-align: center;
+    padding-top: 170px;
+    background: url('https://training.risk.net/sites/default/files/styles/full_image_original/public/2019-03/RiskSkylineHero_0_0.png?itok=xXkYH4B_') 50% 73%;
+    background-size: cover;
+    height: 250px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 32px #346f7c78;
+    .circle{
+        width: 180px;
+        line-height: 180px;
+        border-radius: 50%;
+        text-align: center;
+        background: #346f7c;
+        font-size: 45px;
+        text-transform: uppercase;
+        margin: 0 auto;
+        box-shadow: 0px 0px 32px 12px rgba(255,255,255,0.76);
+        color: #fff;
+    }
+    .name{
+        font-size: 20px;
+        margin-top: 10px;
+    }
+}

@@ -1,0 +1,32 @@
+.loader{
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    &.stripes{
+        position: absolute;
+       width: 100%;
+       height: 100%;
+       left: 0;
+       top: 0;
+       opacity: .5;
+       transform: rotate(180deg);
+        object{
+            width: 100%;
+            height: 100%;
+        }
+    }
+    &.small{
+        position: static;
+        transform: none;
+        object{
+            width: 45px;
+            height: 45px;
+        }
+        
+    }
+    &.bottom{
+        top: 65%;
+    }
+}

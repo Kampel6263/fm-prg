@@ -1,0 +1,5 @@
+{
+    "port": 5000,
+    "jwtSecret": "secret key",
+    "mongoUrl": "mongodb+srv://andrian6263:046220Rfv@cluster0.2gecn.mongodb.net/FinanceData?retryWrites=true&w=majority"
+}
