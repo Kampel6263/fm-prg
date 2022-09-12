@@ -21,6 +21,9 @@ import { type } from "os";
 import Archive from "./pages/archive/archive.component";
 import { ToastsHandlerType, useAppData } from "./App.hook";
 
+import Logo1 from "./assets/FM_logo_white.svg";
+import Logo2 from "./assets/FM_logo_white_v2.svg";
+import Logo3 from "./assets/FM_logo_white_v3.svg";
 type PaymentsType = {
   sum: number;
   date: string;
@@ -215,7 +218,9 @@ function App() {
         <>
           <div className={classes.header}>
             <div className={classes.container}>
-              <div>Logo</div>
+              <div>
+                <img src={Logo3} alt="" />
+              </div>
               <div className={classes.navigation}>
                 <NavLink
                   to="profile"
@@ -279,6 +284,7 @@ function App() {
                       userData={userData}
                       costsData={costData}
                       getCostsData={() => getCostData()}
+                      handleToast={handleToast}
                     />
                   }
                 />

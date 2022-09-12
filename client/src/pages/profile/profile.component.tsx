@@ -15,8 +15,10 @@ import * as Yup from "yup";
 import Credit from "../../components/credit/credit.component";
 import Loader from "../../components/loader/loader.component";
 import CostItem from "../../components/costItem/costItem.component";
-import { toast } from "react-toastify";
+
 import Avatar from "../../components/avatar/avatar.component";
+import { ToastsHandlerType } from "../../App.hook";
+import { initialValuesType, useProfileData } from "./profile.hook";
 
 type HomeProps = {
   token: string;
@@ -27,23 +29,7 @@ type HomeProps = {
   getUserData: () => void;
   getAllUsers: () => void;
   getCostsData: () => void;
-};
-
-type initialValuesType = {
-  sum: number;
-  monthCount: number;
-};
-
-type paymentInitialValuesType = {
-  payment: number;
-};
-
-type editInfoType = {
-  name: string;
-  salary: number;
-  ssc: number;
-  vat: number;
-  company: string;
+  handleToast: (data: ToastsHandlerType) => void;
 };
 
 const getCreditFormSchema = Yup.object().shape({
@@ -72,15 +58,39 @@ const Home: React.FC<HomeProps> = ({
   getBankData,
   getAllUsers,
   getCostsData,
+  handleToast,
 }) => {
-  const [showCreditsForm, setShowCreditsForm] = useState(false);
-  const [showTakePaymentInput, setShowTakePaymentInput] = useState(false);
-  const [myOpenCredit, setMyOpenCredit] = useState<InUseType>();
   const [myCloseCredit, setMyCloseCredit] = useState<InUseType[]>();
   const [showHistory, setShowHistory] = useState(false);
-  const [editInfo, setEditInfo] = useState(false);
-  const [editInfoLoading, setEditInfoLoading] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  const {
+    editInfo,
+    editInfoLoading,
+    initialInfoValues,
+    myOpenCredit,
+    loading,
+    paymentInitialValues,
+    showTakePaymentInput,
+    initialValues,
+    showCreditsForm,
+    profileInfoData,
+    getOverpayment,
+    setShowCreditsForm,
+    setShowTakePaymentInput,
+    handleSubmit,
+    handleEnterPayment,
+    getTotal,
+    handleEditInfo,
+    setMyOpenCredit,
+    setEditInfo,
+  } = useProfileData({
+    getAllUsers,
+    getBankData,
+    getUserData,
+    handleToast,
+    token,
+    userData,
+  });
 
   useEffect(() => {
     const openCredit = peterData?.inUse.filter(
@@ -94,138 +104,6 @@ const Home: React.FC<HomeProps> = ({
     setMyOpenCredit(openCredit);
     setMyCloseCredit(closeCredit);
   }, [peterData?.inUse, userData._id]);
-
-  const initialValues: initialValuesType = {
-    sum: 0,
-    monthCount: 1,
-  };
-
-  const paymentInitialValues: paymentInitialValuesType = {
-    payment: myOpenCredit
-      ? myOpenCredit.remains < myOpenCredit.paymentPerMonth
-        ? myOpenCredit.remains
-        : myOpenCredit.paymentPerMonth
-      : 0,
-  };
-
-  const getOverpayment = (sum: number, monthCount: number) => {
-    return Math.ceil(sum * monthCount * 0.04);
-  };
-
-  const handleSubmit = (values: initialValuesType) => {
-    setLoading(true);
-    axios
-      .post(
-        `/api/bank/getCredit`,
-        {
-          sum: values.sum,
-          overpayment: getOverpayment(values.sum, values.monthCount),
-          monthCount: values.monthCount,
-          name: userData?.name,
-          email: userData?.email,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then(async (res) => {
-        await getBankData();
-        toast.success("Credit taken!");
-      })
-      .catch((err) => {
-        console.log(err.response, "err");
-      })
-      .finally(() => {
-        setShowCreditsForm(false);
-        setLoading(false);
-      });
-  };
-
-  const handleEnterPayment = (values: paymentInitialValuesType) => {
-    setLoading(true);
-    axios
-      .post(
-        `/api/bank/enterPayment`,
-        {
-          payment: values.payment,
-          creditClosed: values.payment >= (myOpenCredit?.remains || 0),
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then(async (res) => {
-        await getBankData();
-        toast.success("Payment saved!");
-      })
-      .catch((err) => {
-        toast.error(err.response.statusText);
-      })
-      .finally(() => {
-        setShowTakePaymentInput(false);
-        setLoading(false);
-      });
-  };
-
-  const handleEditInfo = (values: editInfoType) => {
-    setEditInfoLoading(true);
-
-    axios
-      .put(
-        `/api/user/edit`,
-        {
-          id: userData._id,
-          name: values.name,
-          salary: values.salary,
-          ssc: values.ssc,
-          vat: values.vat,
-          company: values.company,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then(async (res) => {
-        //  console.log9
-        await getUserData();
-        await getAllUsers();
-      })
-      .catch((err) => {
-        console.log(err.response, "err");
-      })
-      .finally(() => {
-        setEditInfo(false);
-        setEditInfoLoading(false);
-        toast.success("Saved!");
-      });
-  };
-
-  const getTotal = (
-    arr: any,
-    key: "andrianSum" | "tanyaSum" | "salary" | "andrianSpent" | "tanyaSpent"
-  ) => {
-    let sum = 0;
-
-    if (key === "salary") {
-      for (let el of arr) {
-        sum += el[key] - (el[key] * el.vat) / 100 - el.ssc;
-      }
-    } else {
-      for (let el of arr) {
-        sum += el[key];
-      }
-    }
-
-    return sum;
-  };
-
-  const initialInfoValues: editInfoType = {
-    name: userData.name,
-    salary: userData.salary,
-    ssc: userData.ssc,
-    vat: userData.vat,
-    company: userData.company,
-  };
 
   return (
     <div className={classes.profile}>
@@ -256,72 +134,32 @@ const Home: React.FC<HomeProps> = ({
                 {({ errors, values }) => (
                   <Form>
                     <div className={classes.infoContainer}>
-                      <InfoItem
-                        name="Name"
-                        form={{
-                          name: "name",
-                          type: "text",
-                          error: errors.name,
-                        }}
-                        loading={editInfoLoading}
-                      />
-                      <InfoItem
-                        name="Email"
-                        value={userData.email}
-                        loading={editInfoLoading}
-                      />
-                      <InfoItem
-                        name="Credit"
-                        value={myOpenCredit?.userId ? "Yes" : "No"}
-                        loading={editInfoLoading}
-                      />
-                      <InfoItem
-                        name="Salary"
-                        form={{
-                          name: "salary",
-                          type: "number",
-                          error: errors.salary,
-                        }}
-                        loading={editInfoLoading}
-                      />
-                      <InfoItem
-                        name="Vat"
-                        form={{
-                          name: "vat",
-                          type: "number",
-                          error: errors.vat,
-                        }}
-                        loading={editInfoLoading}
-                      />
-                      <InfoItem
-                        name="SSC"
-                        form={{
-                          name: "ssc",
-                          type: "number",
-                          error: errors.ssc,
-                        }}
-                        loading={editInfoLoading}
-                      />
-                      <InfoItem
-                        name="Salary net"
-                        value={
-                          values.salary -
-                          (values.salary * values.vat) / 100 -
-                          values.ssc +
-                          "₴"
-                        }
-                        loading={editInfoLoading}
-                      />
-
-                      <InfoItem
-                        name="Company"
-                        form={{
-                          name: "company",
-                          type: "text",
-                          error: errors.company,
-                        }}
-                        loading={editInfoLoading}
-                      />
+                      {profileInfoData.map((el, i) => (
+                        <InfoItem
+                          name={el.name}
+                          form={
+                            el.form
+                              ? {
+                                  name: el.name.toLowerCase(),
+                                  type: el?.type || "text",
+                                  error: errors.name,
+                                }
+                              : undefined
+                          }
+                          value={
+                            el.form
+                              ? undefined
+                              : el.salNet
+                              ? values.salary -
+                                (values.salary * values.vat) / 100 -
+                                values.ssc +
+                                "₴"
+                              : el.value
+                          }
+                          loading={editInfoLoading}
+                          key={el.name + i}
+                        />
+                      ))}
                     </div>
                     {editInfo && <Button name="Save" mainType="submit" />}
                   </Form>
@@ -330,25 +168,9 @@ const Home: React.FC<HomeProps> = ({
             </>
           ) : (
             <div className={classes.infoContainer}>
-              <InfoItem name="Name" value={userData?.name || "empty"} />
-              <InfoItem name="Email" value={userData?.email} />
-              <InfoItem
-                name="Credit"
-                value={myOpenCredit?.userId ? "Yes" : "No"}
-              />
-              <InfoItem name="Salary" value={userData.salary + "₴"} />
-              <InfoItem name="VAT" value={userData.vat + "%"} />
-              <InfoItem name="SSC" value={userData.ssc + "₴"} />
-              <InfoItem
-                name="Salary net"
-                value={
-                  userData.salary -
-                  (userData.salary * userData.vat) / 100 -
-                  userData.ssc +
-                  "₴"
-                }
-              />
-              <InfoItem name="Company" value={userData.company} />
+              {profileInfoData.map((el, i) => (
+                <InfoItem name={el.name} value={el.value} key={el.name + i} />
+              ))}
             </div>
           )}
         </div>

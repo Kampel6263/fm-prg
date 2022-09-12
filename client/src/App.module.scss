@@ -15,21 +15,24 @@
         .navigation{
             margin-left: auto;
             margin-right: 40px;
-            width: 290px;
+            width: 310px;
             display: flex;
+          
             justify-content: space-between;
             a{
                 color: #ffffffb2;
                 text-decoration: none;
-                font-size: 18px;
+                font-size: 16px;
                 border-bottom: 1px solid transparent;
                 transition: .1s;
+                padding: 3px 5px;
+                border-bottom: 1px solid #ffffff00;
                 &:hover{
                     color: #ffffff;
                 }
                 &.active{
                     color: #ffffff;
-                    border-bottom: 1px solid #ffffff;
+                    border-color:  #ffffff;
                 }
             }
         }
